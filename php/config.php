@@ -3,7 +3,7 @@
 $phpSelf = $_SERVER['PHP_SELF'];
 $serverDir = substr($phpSelf, 0, strrpos($phpSelf, '/') + 1); // 例子: "/ueditor/php/"
 $serverUrl = $serverDir . 'server.php'; // 例子: "/ueditor/php/server.php"
-$uploadPathPrefix = '/ueditor/php/'; // 例子: "/ueditor/php/"
+$uploadPathPrefix = $serverDir; // 例子: "/ueditor/php/"
 
 return array(
 

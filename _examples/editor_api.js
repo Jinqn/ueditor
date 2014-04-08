@@ -83,6 +83,7 @@
             'plugins/charts.js',
             'plugins/section.js',
             'plugins/simpleupload.js',
+            'plugins/qmailsnap.js',
             'ui/ui.js',
             'ui/uiutils.js',
             'ui/uibase.js',

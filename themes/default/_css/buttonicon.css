@@ -414,6 +414,10 @@
     background-position: -698px -76px;
 }
 
+
+.edui-default  .edui-for-iframeupload  .edui-icon {
+    background-position: -380px 0px;
+}
 /* uploader */
 .edui-default  .edui-for-simpleupload  .edui-icon {
     background-position: -380px 0px;
@@ -447,4 +451,9 @@
     height: 20px;
     margin: 0;
     padding: 0;
+}
+
+/* qmailsnap */
+.edui-default  .edui-for-qmailsnap  .edui-icon {
+    background-position: -581px -40px
 }

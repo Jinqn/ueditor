@@ -64,7 +64,9 @@
         'blockquote', 'pasteplain', 'pagebreak',
         'selectall', 'print','horizontal', 'removeformat', 'time', 'date', 'unlink',
         'insertparagraphbeforetable', 'insertrow', 'insertcol', 'mergeright', 'mergedown', 'deleterow',
-        'deletecol', 'splittorows', 'splittocols', 'splittocells', 'mergecells', 'deletetable', 'drafts', 'qmailsnap'];
+        'deletecol', 'splittorows', 'splittocols', 'splittocells', 'mergecells', 'deletetable', 'drafts', 'qmailsnap',
+        'qmailsnap'
+    ];
 
     for (var i = 0, ci; ci = btnCmds[i++];) {
         ci = ci.toLowerCase();
@@ -840,6 +842,74 @@
             editor.webuploader.addButton({
                 id: '#' + btnId
             });
+        });
+        return ui;
+    };
+
+
+
+    /* 简单上传插件 */
+    editorui["iframeupload"] = function (editor) {
+        var uploadInput,
+            name = 'iframeupload',
+            ui = new editorui.Button({
+                className:'edui-for-' + name,
+                title:editor.options.labelMap[name] || editor.getLang("labelMap." + name) || '',
+                onclick:function () {
+                    uploadInput.click();
+                },
+                theme:editor.options.theme,
+                showText:false
+            });
+        editorui.buttons[name] = ui;
+        editor.addListener('ready', function(){
+            var b = ui.getDom('body'),
+                iconSpan = b.children[0],
+                form = editor.document.createElement('form'),
+                input = uploadInput = editor.document.createElement('input'),
+                iframe = editor.document.createElement('iframe'),
+                iframeId = 'edui_iframe_' + (+new Date()).toString(36);
+
+            input.type = 'file';
+            input.name = editor.options.imageFieldName;
+            input.style.cssText = 'display:none;width:0px;height:0px;border:0;margin:0;padding:0;position:absolute;';
+
+            iframe.name = iframe.id = iframeId;
+            iframe.style.cssText = 'display:none;width:0px;height:0px;border:0;margin:0;padding:0;position:absolute;';
+
+            form.target = iframeId;
+            form.method = 'POST';
+            form.enctype = 'multipart/form-data';
+            form.action = editor.options.imageUrl;
+            form.style.cssText = 'width:20px;height:20px;margin:0;padding:0;position:relative;';
+
+            form.appendChild(input);
+            form.appendChild(iframe);
+            iconSpan.appendChild(form);
+
+            input.onchange = function(){
+                form.submit();
+            };
+            iframe.onload = function(){
+                var picLink, json, result = (iframe.contentDocument || iframe.contentWindow.contentDocument).body.innerHTML;
+                try{
+                    json = (new Function("return " + result))();
+                    picLink = editor.options.imagePath + json.url;
+                    if(json.url) {
+                        editor.execCommand('insertimage', {
+                            src: picLink,
+                            _src: picLink
+                        });
+                    } else {
+                        showError('server error: ' + json.state);
+                    }
+                }catch(er){}
+                input.value = '';
+            };
+
+            function showError(msg){
+                alert(msg || '上传错误!');
+            }
         });
         return ui;
     };
